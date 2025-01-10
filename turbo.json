@@ -8,6 +8,7 @@
         "android",
         "!android/build",
         "src/*.ts",
+        "plugin.js",
         "src/*.tsx",
         "example/package.json",
         "example/android",
@@ -22,6 +23,7 @@
       "inputs": [
         "package.json",
         "*.podspec",
+        "plugin.js",
         "ios",
         "src/*.ts",
         "src/*.tsx",
