@@ -3,19 +3,31 @@ import ZipArchive
 @objc(ZipStream)
 class ZipStream: NSObject {
    @objc
-    func listZipContents(_ zipFilePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        do {
-            let zipFile = ZipArchive()
-            if !zipFile.unzipOpenFile(zipFilePath) {
-                throw NSError(domain: "com.zipstream", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to open ZIP file"])
-            }
-            let fileNames = zipFile.getZipFileContents()
-            zipFile.unzipCloseFile()
-            resolve(fileNames)
-        } catch let error {
-            reject("ERROR_LISTING_CONTENTS", "Failed to list contents of the ZIP file", error)
+func listZipContents(_ zipFilePath: String, password: String?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    do {
+        let zipFile = ZipArchive()
+        
+        // Open the ZIP file, with or without a password
+        let success: Bool
+        if let password = password {
+            success = zipFile.unzipOpenFile(zipFilePath, password: password)
+        } else {
+            success = zipFile.unzipOpenFile(zipFilePath)
         }
+        
+        if !success {
+            throw NSError(domain: "com.zipstream", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to open ZIP file"])
+        }
+        
+        // Retrieve the list of file names from the ZIP file
+        let fileNames = zipFile.getZipFileContents()
+        zipFile.unzipCloseFile()
+        resolve(fileNames)
+        
+    } catch let error {
+        reject("ERROR_LISTING_CONTENTS", "Failed to list contents of the ZIP file", error)
     }
+}
 
    @objc
     func streamFileFromZip(_ zipFilePath: String, entryName: String, type: String, password: String?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {

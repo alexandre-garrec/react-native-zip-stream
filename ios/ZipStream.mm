@@ -4,6 +4,7 @@
 
 // Exporting the listZipContents method
 RCT_EXTERN_METHOD(listZipContents:(NSString *)zipFilePath
+                 password:(NSString *)password
                  resolve:(RCTPromiseResolveBlock)resolve
                  reject:(RCTPromiseRejectBlock)reject)
 

@@ -68,6 +68,7 @@ Lists the contents of a ZIP file.
 #### Parameters
 
 - `zipFilePath`: `string` - The full path to the ZIP file.
+- `password`: `string` (optional) - The password for the ZIP file, if it is encrypted.
 
 #### Returns
 
@@ -114,6 +115,7 @@ Creates a new ZIP file from the contents of a specified directory.
 
 - `destinationPath`: `string` - The full path where the ZIP file should be created.
 - `sourcePath`: `string` - The path to the directory or file that should be zipped.
+- `password`: `string` (optional) - The password for the ZIP file, if it is encrypted.
 
 #### Returns
 
@@ -204,10 +206,11 @@ import { createZipFile } from 'react-native-zip-stream';
 
 const sourcePath = '/path/to/source/folder';
 const destinationPath = '/path/to/output.zip';
+const password = 'yourPassword';
 
 const exampleCreateZipFile = async () => {
   try {
-    const success = await createZipFile(destinationPath, sourcePath);
+    const success = await createZipFile(destinationPath, sourcePath, password);
     console.log('Zip creation successful:', success);
   } catch (error) {
     console.error('Error creating zip file:', error);

@@ -1,38 +1,51 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import {
-  listZipContents,
-  // streamFileFromZip,
-  // unzipFile,
-} from 'react-native-zip-stream';
+import { listZipContents } from 'react-native-zip-stream'; // Assuming the import is correct
 import RNFS from 'react-native-fs';
 
 export default function App() {
+  // Async function wrapped in useEffect
   const test = async () => {
-    const data = await listZipContents(
-      `${RNFS.DocumentDirectoryPath}/esmod-1.epub`
-    );
+    try {
+      // Check if the file exists before trying to list its contents
+      const filePath = `${RNFS.DocumentDirectoryPath}/`;
+      const fileExists = await RNFS.exists(filePath);
 
-    console.log(data);
+      if (!fileExists) {
+        console.log(`File not found at path: ${filePath}`);
+        return;
+      }
 
-    // const file = await streamFileFromZip(
-    //   `${RNFS.DocumentDirectoryPath}/esmod-1.epub`,
-    //   data[0]
-    // );
+      const data = await listZipContents(filePath);
 
-    // console.log(`${RNFS.DocumentDirectoryPath}/test`);
+      console.log('Contents of the ZIP file:', data);
 
-    // console.log(
-    //   await unzipFile(
-    //     `${RNFS.DocumentDirectoryPath}/esmod-1.epub`,
-    //     `${RNFS.DocumentDirectoryPath}/test`
-    //   )
-    // );
+      // Uncomment if you want to test other functionalities
+      // const file = await streamFileFromZip(
+      //   `${RNFS.DocumentDirectoryPath}/esmod-1.epub`,
+      //   data[0]
+      // );
+      // console.log('File from ZIP:', file);
+
+      // console.log(`${RNFS.DocumentDirectoryPath}/test`);
+      // const unzipResult = await unzipFile(
+      //   `${RNFS.DocumentDirectoryPath}/esmod-1.epub`,
+      //   `${RNFS.DocumentDirectoryPath}/test`
+      // );
+      // console.log('Unzipped successfully:', unzipResult);
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
   };
-  test();
+
+  // Use effect to run the test only once when the component mounts
+  useEffect(() => {
+    test(); // Call test only once on component mount
+  }, []); // Empty dependency array ensures this runs only once
+
   return (
     <View style={styles.container}>
-      <Text>TEst</Text>
+      <Text>Test</Text>
     </View>
   );
 }

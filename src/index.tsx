@@ -37,12 +37,13 @@ const log = (message: string, error?: any) => {
 };
 
 export const listZipContents = async (
-  zipFilePath: string
+  zipFilePath: string,
+  password?: string
 ): Promise<string[]> => {
   validateStringParam(zipFilePath, 'zipFilePath');
 
   try {
-    return await ZipStreamModule.listZipContents(zipFilePath);
+    return await ZipStreamModule.listZipContents(zipFilePath, password || null);
   } catch (error) {
     log('Error listing ZIP contents', error);
     throw error;
@@ -93,13 +94,18 @@ export const unzipFile = async (
 
 export const createZipFile = async (
   destinationPath: string,
-  sourcePath: string
+  sourcePath: string,
+  password?: string
 ): Promise<boolean> => {
   validateStringParam(destinationPath, 'destinationPath');
   validateStringParam(sourcePath, 'sourcePath');
 
   try {
-    return await ZipStreamModule.createZipFile(destinationPath, sourcePath);
+    return await ZipStreamModule.createZipFile(
+      destinationPath,
+      sourcePath,
+      password || null
+    );
   } catch (error) {
     log('Error creating ZIP file', error);
     throw error;
